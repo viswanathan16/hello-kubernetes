@@ -39,4 +39,4 @@ jobs:
           aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.EKS_CLUSTER_NAME }}
           kubectl set image deployment/fastapi-microservice fastapi-microservice=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG -n default
           kubectl rollout status deployment/fastapi-microservice -n default
-
+          ##############
