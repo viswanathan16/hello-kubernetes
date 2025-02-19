@@ -1,33 +1,31 @@
 pipeline {
     agent any
-
-    environment {
-        AWS_ACCOUNT_ID = "058264079741"
-        AWS_REGION = "ap-south-1"
+     environment {
+        
         ECR_REGISTRY = "058264079741.dkr.ecr.ap-south-1.amazonaws.com"
         ECR_REPOSITORY = "fastapi-microservice"
         EKS_CLUSTER_NAME = "aivar-eks-cluster"
-    }
-
-    stages{
+                  }
+    stages {
         stage('configure aws credentials') {
             steps {
-              script{
-                withCredentials([
-                [$class: 'AmazonWebServicesCredentialsBinding',
+                withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
                 accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-                credentialsId: 'aws-credentials']
-])
+                credentialsId: 'aws-credentials'
+                ]]) 
+                {
+                    script 
                     {
-                        sh """
-                           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                        """
-                     }
+                        sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID'
+                        sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
+                    
                     }
-                  }    
-        stage('Checkout Code') {
+                }
+            }
+        }
+         stage('Checkout Code') {
             steps {
                 script {
                     checkout scm
@@ -38,7 +36,7 @@ pipeline {
 
         stage('Login to Amazon ECR') {
             steps {
-                
+
                     sh """
                         aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
                     """
@@ -70,7 +68,7 @@ pipeline {
                     """
                 }
             }
-        }
+        }    
     }
-}
+   
 
