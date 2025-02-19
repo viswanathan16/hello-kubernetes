@@ -16,7 +16,10 @@ def get_info():
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to the FastAPI microservice!"}
+    return { 
+             "message": "Welcome to the FastAPI microservice!"
+             "info": f"Hi! This is {pod_name} pod responding to your request."
+            }
 
 if __name__ == "__main__":
     import uvicorn
