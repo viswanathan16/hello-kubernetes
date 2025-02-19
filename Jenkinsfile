@@ -1,7 +1,8 @@
 pipeline {
     agent any
      environment {
-        
+        AWS_REGION = "ap-south-1"
+        AWS_ACCOUNT_ID = "058264079741"
         ECR_REGISTRY = "058264079741.dkr.ecr.ap-south-1.amazonaws.com"
         ECR_REPOSITORY = "fastapi-microservice"
         EKS_CLUSTER_NAME = "aivar-eks-cluster"
