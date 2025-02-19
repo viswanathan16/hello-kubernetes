@@ -48,11 +48,11 @@ pipeline {
         stage('Build and Push Docker Image') {
             steps {
                 script {
-                    def imageTag = "fastapi-micro:${env.GIT_COMMIT_HASH}"
+                    def imageTag = "fastapi-micro-${env.GIT_COMMIT_HASH}"
                     sh """
                         docker build -t $imageTag .
-                        docker tag $imageTag ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$ECR_REPOSITORY:$imageTag
-                        docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$ECR_REPOSITORY:$imageTag
+                        docker tag ${imageTag}  ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${imageTag}
+                        docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${imageTag}
                     """
                     env.IMAGE_TAG = imageTag
                 }
@@ -64,7 +64,7 @@ pipeline {
                 script {
                     sh """
                         aws eks update-kubeconfig --region ${AWS_REGION} --name ${EKS_CLUSTER_NAME}
-                        kubectl set image deployment/fastapi-microservice fastapi-microservice=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/$ECR_REPOSITORY:${IMAGE_TAG} -n default
+                        kubectl set image deployment/fastapi-microservice fastapi-microservice=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY}:${IMAGE_TAG} -n default
                         kubectl rollout status deployment/fastapi-microservice -n default
                     """
                 }
