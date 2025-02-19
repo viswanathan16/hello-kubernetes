@@ -2,9 +2,9 @@ pipeline {
     agent any
     
     environment {
-        AWS_CREDENTIALS = credentials('aws-credentials')
-        AWS_ACCOUNT_ID = "058264079741"  // Replace with your AWS Account ID
+        AWS_ACCOUNT_ID = "058264079741"  
         AWS_REGION = "ap-south-1"
+        ECR_REGISTRY = "058264079741.dkr.ecr.ap-south-1.amazonaws.com"
         ECR_REPOSITORY = "fastapi-microservice"
         EKS_CLUSTER_NAME = "aivar-eks-cluster"
     }
@@ -19,8 +19,13 @@ pipeline {
         stage('Login to Amazon ECR') {
             steps {
                 script {
-                    sh "aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
-                }
+                    sh """
+                      
+                      export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+                      export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+                      aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY                
+                 """
+              }
             }
         }
         
