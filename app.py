@@ -18,7 +18,7 @@ def get_info():
         "namespace": namespace,
         "image_version": image_version,
         "status": "Service is running smoothly!"
-
+        }
 @app.get("/")
 def root():
     return {"message": "Welcome to the FastAPI microservice!"}
