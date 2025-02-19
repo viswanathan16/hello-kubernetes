@@ -9,24 +9,24 @@ pipeline {
         EKS_CLUSTER_NAME = "aivar-eks-cluster"
     }
 
-    stages {
+    stages{
         stage('configure aws credentials') {
             steps {
-                withCredentials([[
-                $class: 'AmazonWebServicesCredentialsBinding',
+              script{
+                withCredentials([
+                [$class: 'AmazonWebServicesCredentialsBinding',
                 accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                 secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
-                credentialsId: 'aws-credentials']])
-
-                script 
+                credentialsId: 'aws-credentials']
+])
                     {
-                        sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID'
-                        sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
-                     
+                        sh """
+                           aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+                           aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+                        """
+                     }
                     }
-
-
-}    
+                  }    
         stage('Checkout Code') {
             steps {
                 script {
