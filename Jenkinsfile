@@ -10,6 +10,23 @@ pipeline {
     }
 
     stages {
+        stage('configure aws credentials') {
+            steps {
+                withCredentials([[
+                $class: 'AmazonWebServicesCredentialsBinding',
+                accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                secretKeyVariable: 'AWS_SECRET_ACCESS_KEY',
+                credentialsId: 'aws-credentials']])
+
+                script 
+                    {
+                        sh 'aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID'
+                        sh 'aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY'
+                     
+                    }
+
+
+}    
         stage('Checkout Code') {
             steps {
                 script {
@@ -21,10 +38,7 @@ pipeline {
 
         stage('Login to Amazon ECR') {
             steps {
-                withCredentials([ 
-                    string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
-                    string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY')
-                ]) {
+                
                     sh """
                         aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY
                     """
