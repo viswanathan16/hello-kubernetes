@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging into Amazon ECR...
+      - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 058264079741.dkr.ecr.ap-south-1.amazonaws.com
+  build:
+    commands:
+      - echo Building Docker image...
+      - docker build -t 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-service:latest .
+      - docker push 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-service:latest
+  post_build:
+    commands:
+      - echo Writing new image definitions file...
+      - printf '[{"name":"fastapi-container","imageUri":"058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-service:latest"}]' > imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
+

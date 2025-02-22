@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 import socket
 import os
+from datetime import datetime
 
 app = FastAPI()
 
@@ -19,6 +20,17 @@ def get_info():
         "image_version": image_version,
         "status": "Service is running smoothly!"
         }
+
+
+@app.get("/health")
+def health_check():
+    current_time = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
+
+    return {
+        "status": "healthy",
+        "timestamp": current_time
+    }
+
 @app.get("/")
 def root():
     return {"message": "Welcome to the FastAPI microservice!"}
