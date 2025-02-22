@@ -11,8 +11,10 @@ phases:
     commands:
       - echo Building Docker image...
       - docker build -t 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:$IMAGE_TAG .
+      - docker tag 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:$IMAGE_TAG 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:latest
       - docker push 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:$IMAGE_TAG
-      
+      - docker push 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:latest
+
   post_build:
     commands:
       - echo Writing new image definitions file...

@@ -1,0 +1,9 @@
+version: 0.0
+resources:
+  - name: "fastapi-service"
+    type: "Kubernetes::Application"
+    properties:
+      KubernetesNamespace: "default"
+      KubernetesManifestPaths:
+        - "deployment.yml"
+
