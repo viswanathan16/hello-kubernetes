@@ -19,4 +19,4 @@ phases:
       - printf '[{"name":"fastapi-container","imageUri":"058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:%s"}]' "$IMAGE_TAG" > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
-
+    ##################
