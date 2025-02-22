@@ -5,10 +5,12 @@ phases:
     commands:
       - echo Logging into Amazon ECR...
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 058264079741.dkr.ecr.ap-south-1.amazonaws.com
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-7)
-      - IMAGE_TAG=${COMMIT_HASH}
+      - echo "Updating kubeconfig..."
+      - aws eks update-kubeconfig --region ap-south-1 --name aivar-eks-cluster
   build:
     commands:
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c1-7)
+      - IMAGE_TAG=${COMMIT_HASH}
       - echo Building Docker image...
       - docker build -t 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:$IMAGE_TAG .
       - docker tag 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:$IMAGE_TAG 058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:latest
@@ -17,6 +19,8 @@ phases:
 
   post_build:
     commands:
+      - echo "Applying Kubernetes manifests..."
+      - kubectl apply -f deployment.yml
       - echo Writing new image definitions file...
       - printf '[{"name":"fastapi-container","imageUri":"058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:%s"}]' "$IMAGE_TAG" > imagedefinitions.json
 artifacts:
