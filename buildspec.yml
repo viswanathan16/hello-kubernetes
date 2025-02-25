@@ -22,7 +22,7 @@ phases:
     commands:
       - echo "Applying Kubernetes manifests..."
       - aws sts get-caller-identity  
-      - kubectl get nodes  
+      - kubectl get nodes -o wide
       - kubectl apply -f deployment.yml
       - echo Writing new image definitions file...
       - printf '[{"name":"fastapi-container","imageUri":"058264079741.dkr.ecr.ap-south-1.amazonaws.com/fastapi-microservice:%s"}]' "$IMAGE_TAG" > imagedefinitions.json
