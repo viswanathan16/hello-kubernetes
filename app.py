@@ -12,14 +12,14 @@ def get_info():
     namespace = os.getenv("POD_NAMESPACE", "default")
     image_version = os.getenv("IMAGE_VERSION", "1.0.0")
 
-    return {
+    return 
         "message": f"Hi! This is {pod_name} running in {namespace} namespace.",
         "pod_name": pod_name,
         "node_name": node_name,
         "namespace": namespace,
         "image_version": image_version,
         "status": "Service is running smoothly!"
-        }
+
 
 
 @app.get("/health")
